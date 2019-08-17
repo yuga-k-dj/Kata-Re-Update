@@ -1,3 +1,9 @@
+# Posenet → OSC → Max → Crossfader
+This repository contains amxd file to controll the Live's master Crossfader using "Posenet to OSC".
+*Used [Posenet to OSC](https://github.com/tommymitch/posenetosc)
+
+
+
 # Posenet to OSC 
 
 This repository contains a modified version of [PoseNet](https://github.com/tensorflow/tfjs-models/tree/master/posenet) by [Dan Oved](https://www.danioved.com/) that sends detected keypoints as OSC encoded datagram packets. This enables tracked keypoints to be used within any OSC compatible environment (Max/MSP, Python, PD, C++, Processing, you name it). This is effectively PoseNet + [osc-js](https://github.com/colinbdclark/osc.js/). 
@@ -78,3 +84,4 @@ All keypoints correspond to a body part.  The parts are:
 | rightKnee |
 | leftAnkle |
 | rightAnkle |
+# Kata-Re-Update
