@@ -1,8 +1,8 @@
 {
-  "name": "n4m-posenet",
-  "version": "1.0.0",
+  "name": "tfjs-models",
+  "version": "0.0.1",
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "license": "Apache-2.0",
   "private": true,
   "engines": {
@@ -11,16 +11,14 @@
   "dependencies": {
     "@tensorflow-models/posenet": "^0.2.2",
     "@tensorflow/tfjs": "^0.13.0",
-    "socket.io": "^2.1.1",
-    "socket.io-client": "^2.1.1",
+    "osc-js": "^2.0.2",
     "stats.js": "^0.17.0"
   },
   "scripts": {
-    "watch": "NODE_ENV=development parcel index.html --no-hmr --open ",
-    "build": "NODE_ENV=production parcel build index.html --no-minify --public-url ./",
-    "build-camera": "NODE_ENV=production parcel build camera.html  --no-minify --public-url ./",
-    "lint": "eslint .",
-    "start": "electron ."
+    "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr --open ",
+    "build": "cross-env NODE_ENV=production parcel build index.html --no-minify --public-url ./",
+    "build-camera": "cross-env NODE_ENV=production parcel build camera.html  --no-minify --public-url ./",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -29,12 +27,14 @@
     "babel-preset-env": "~1.6.1",
     "babel-preset-es2017": "^6.24.1",
     "clang-format": "~1.2.2",
-    "dat.gui": "^0.7.6",
-    "electron": "^3.1.11",
+    "cross-env": "^5.2.0",
+    "dat.gui": "^0.7.2",
     "eslint": "^4.19.1",
-    "parcel-bundler": "^1.12.3"
+    "eslint-config-google": "^0.9.1",
+    "parcel-bundler": "~1.10.3"
   },
   "eslintConfig": {
+    "extends": "google",
     "rules": {
       "require-jsdoc": 0,
       "valid-jsdoc": 0
