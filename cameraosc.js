@@ -238,6 +238,11 @@ function detectPoseInRealTime(video, net) {
     let poses = [];
     let minPoseConfidence;
     let minPartConfidence;
+    var right_pose = 0;
+    var left_pose = 0;
+    var half_Width = videoWidth / 2;  //書き足し3行
+    // let right_poses = [];
+    // let left_poses = [];
     switch (guiState.algorithm) {
       case 'single-pose':
         const pose = await guiState.net.estimateSinglePose(
@@ -275,7 +280,9 @@ function detectPoseInRealTime(video, net) {
 
     for (let i = 0; i < poses.length; i++) 
     {
-      const pose = poses[i];
+      const pose = poses[i]; //元は const pose
+
+    
       if (pose.score >= minPoseConfidence) 
       {
          if (guiState.output.showPoints) {
@@ -283,13 +290,10 @@ function detectPoseInRealTime(video, net) {
          }
          if (guiState.output.showSkeleton) {
           drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-        }
-        if (guiState.output.showBoundingBox) {
-          drawBoundingBox(pose.keypoints, ctx);
-        }
-
-
-        // var message = new OSC.Message('/pose/' + i);
+         }
+         if (guiState.output.showBoundingBox) {
+          drawBoundingBox(pose.keypoints, ctx);  //　　　←こいつ使える？
+         }
 
           // normal ------------------------------------------------
         
@@ -301,33 +305,43 @@ function detectPoseInRealTime(video, net) {
              continue;
           }
 
-          var message = new OSC.Message('/pose/' + i + '/' + keypoint.part);
+        //書き足し6行
 
-          const {y, x} = keypoint.position;
-          
-          // message.add ("/" + keypoint.part);
-          // message.add ("/" + keypoint.part + x + "," + y);
-          
-          
-          
-          message.add (x);
-          // message.add (',');
-          // message.add (y);
+          // var message = new OSC.Message('/pose/' + i + '/' + keypoint.part);
 
-          // message.add (',');
-          // message.add (minX);
-          // message.add (',');
-          // message.add (minY);
-          // message.add (',');
-          // message.add (maxX);
-          // message.add (',');
-          // message.add (maxY);
+          const {y,x} = keypoint.position;3 // 元はconst {y,x}
+
+          if (pose.keypoints[i].position.x > half_Width) {
+            right_pose++;
+          }
+          if (pose.keypoints[i].position.x < half_Width) {
+            left_pose++;
+          } else if (pose.keypoints[i].position.x == half_Width) {
+            continue;
+          }
+
+
+
+          // var message = new OSC.Message('/right_pose' + '/' + right_pose + '/' + 'left_pose' + '/' + left_pose);
+          var message = new OSC.Message('/r');
+
+          // message.add (x);
+          //書き足し2行
+          message.add (right_pose);
+          message.add (left_pose);
+          osc.send (message);
 
           // normal OVER ----------------------------------------------
           
-          osc.send (message);
+          // osc.send (message);
         }
+
+
       }
+      // if (x > 250) {
+      //   const right_pose = poses[i]
+        
+      // }
     }
 
     // poses.forEach(({score, keypoints}) => {

@@ -56737,7 +56737,7 @@ module.exports = ws
 var define;
 var global = arguments[3];
 var Buffer = require("buffer").Buffer;
-var __dirname = "/Users/ykksfa/node/Kata-Re-Update/node_modules/osc-js/lib";
+var __dirname = "/Users/ykksfa/node/Multi_Motion_Crossfader/node_modules/osc-js/lib";
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -58416,6 +58416,11 @@ function detectPoseInRealTime(video, net) {
     let poses = [];
     let minPoseConfidence;
     let minPartConfidence;
+    var right_pose = 0;
+    var left_pose = 0;
+    var half_Width = videoWidth / 2; //書き足し3行
+    // let right_poses = [];
+    // let left_poses = [];
 
     switch (guiState.algorithm) {
       case 'single-pose':
@@ -58446,7 +58451,7 @@ function detectPoseInRealTime(video, net) {
 
 
     for (let i = 0; i < poses.length; i++) {
-      const pose = poses[i];
+      const pose = poses[i]; //元は const pose
 
       if (pose.score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
@@ -58458,9 +58463,8 @@ function detectPoseInRealTime(video, net) {
         }
 
         if (guiState.output.showBoundingBox) {
-          (0, _demo_util.drawBoundingBox)(pose.keypoints, ctx);
-        } // var message = new OSC.Message('/pose/' + i);
-        // normal ------------------------------------------------
+          (0, _demo_util.drawBoundingBox)(pose.keypoints, ctx); //　　　←こいつ使える？
+        } // normal ------------------------------------------------
 
 
         for (let j = 0; j < pose.keypoints.length; j++) {
@@ -58468,30 +58472,39 @@ function detectPoseInRealTime(video, net) {
 
           if (keypoint.score < minPartConfidence) {
             continue;
-          }
+          } //書き足し6行
+          // var message = new OSC.Message('/pose/' + i + '/' + keypoint.part);
 
-          var message = new OSC.Message('/pose/' + i + '/' + keypoint.part);
+
           const {
             y,
             x
-          } = keypoint.position; // message.add ("/" + keypoint.part);
-          // message.add ("/" + keypoint.part + x + "," + y);
+          } = keypoint.position;
+          3; // 元はconst {y,x}
 
-          message.add(x); // message.add (',');
-          // message.add (y);
-          // message.add (',');
-          // message.add (minX);
-          // message.add (',');
-          // message.add (minY);
-          // message.add (',');
-          // message.add (maxX);
-          // message.add (',');
-          // message.add (maxY);
-          // normal OVER ----------------------------------------------
+          if (pose.keypoints[i].position.x > half_Width) {
+            right_pose++;
+          }
 
-          osc.send(message);
+          if (pose.keypoints[i].position.x < half_Width) {
+            left_pose++;
+          } else if (pose.keypoints[i].position.x == half_Width) {
+            continue;
+          } // var message = new OSC.Message('/right_pose' + '/' + right_pose + '/' + 'left_pose' + '/' + left_pose);
+
+
+          var message = new OSC.Message('/r'); // message.add (x);
+          //書き足し2行
+
+          message.add(right_pose);
+          message.add(left_pose);
+          osc.send(message); // normal OVER ----------------------------------------------
+          // osc.send (message);
         }
-      }
+      } // if (x > 250) {
+      //   const right_pose = poses[i]
+      // }
+
     } // poses.forEach(({score, keypoints}) => {
     //   if (score >= minPoseConfidence) {
     //     if (guiState.output.showPoints) {
